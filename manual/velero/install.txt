@@ -1,0 +1,56 @@
+https://github.com/vmware-tanzu/velero/releases/tag/v1.14.1
+
+https://github.com/vmware-tanzu/velero/releases/download/v1.14.1/velero-v1.14.1-linux-amd64.tar.gz
+
+
+
+===================================================================================================
+
+Run Velero on AWS
+https://velero.io/docs/v1.0.0/aws-config/
+
+
+============================================
+wget https://github.com/vmware-tanzu/velero/releases/download/v1.14.1/velero-v1.14.1-linux-amd64.tar.gz
+tar -xvf velero-v1.14.1-linux-amd64.tar.gz
+sudo mv velero-v1.14.1-linux-amd64/velero /usr/local/bin/
+velero version
+
+aws iam create-user --user-name velero
+aws iam attach-user-policy --user-name velero --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+aws iam attach-user-policy --user-name velero --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+
+aws iam create-access-key --user-name velero | jq -r '.AccessKey | "[default]\naws_access_key_id=\(.AccessKeyId)\naws_secret_access_key=\(.SecretAccessKey)"' > credentials-velero
+
+
+credentials-velero:
+[default]
+aws_access_key_id=<YOUR_ACCESS_KEY_ID>
+aws_secret_access_key=<YOUR_SECRET_ACCESS_KEY>
+
+
+export BUCKET=velero-backups-abc
+export REGION=us-east-1
+
+aws s3 mb s3://${BUCKET} --region $REGION
+
+velero install \
+    --provider aws \
+    --plugins velero/velero-plugin-for-aws:v1.10.1 \
+    --bucket $BUCKET \
+    --backup-location-config region=${REGION} \
+    --snapshot-location-config region=${REGION} \
+    --secret-file ./credentials-velero \
+    --velero-pod-cpu-request 500m \
+    --velero-pod-mem-request 512Mi \
+    --velero-pod-cpu-limit 500m \
+    --velero-pod-mem-limit 512Mi
+
+
+
+
+k logs -f -l component=velero  -n velero
+
+velero backup create argocd-backup --include-namespaces argocd -wait
+
+velero restore create argocd --from-backup argocd-backup

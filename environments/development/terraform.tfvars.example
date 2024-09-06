@@ -1,0 +1,53 @@
+region           = "us-east-1"
+aws_profile_name = "dev-admin"
+dns_profile_name = "default"
+project_name     = "dev-roject"
+cluster_version  = "1.30"
+ssh_key_name     = "k8s-aws-key"
+ssh_key_path     = "~/.ssh/id_k8s.pub"
+ssh_private_path = "~/.ssh/id_k8s"
+domain_name      = "domain.com"
+postgres_instance_class = "db.t3.micro"
+postgres_version = "16.3"
+postgres_master_password = "postgrespassword"
+email_server = "email-smtp.com"
+email_port = 587
+email_user = "AK"
+email_password = "BE"
+email_from = "admin@domain.com"
+ssl_cert_path = "~/.ssh/domain.crt"
+ssl_key_path = "~/.ssh/domain.key"
+grafana_host = "grafana-dev"
+grafana_password = "grafanapassword"
+grafana_email = "grafana@domain.com"
+grafana_db_user =  "grafana"
+grafana_db_name = "grafana"
+grafana_db_password = "grafanadbpassword"
+argocd_rbac_entries = [
+  {
+    user = "user1"
+    role = "role:org-admin"
+  },
+  {
+    user = "user2"
+    role = "role:org-admin"
+  },
+  {
+    user = "user3"
+    role = "role:org-admin"
+  }
+]
+argocd_accounts_entries = [ 
+    {
+    user     = "user1"
+    permissions = "apiKey, login"
+  },
+  {
+    user     = "user2"
+    permissions = "apiKey, login"
+  },
+  {
+    user     = "user3"
+    permissions = "apiKey, login"
+  }
+]
