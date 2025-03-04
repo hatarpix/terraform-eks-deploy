@@ -17,3 +17,8 @@ variable "oidc_provider_url" {
   description = "The URL of the OIDC provider"
   type        = string
 }
+
+variable "helm_version" {
+  description = "The version of the Helm chart to use"
+  type        = string
+}

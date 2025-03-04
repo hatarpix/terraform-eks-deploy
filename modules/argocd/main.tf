@@ -2,9 +2,14 @@ resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
-  version    = "7.5.2"
+  version    = var.helm_argocd_version
   namespace  = "argocd"
   create_namespace = true
+
+  set {
+    name  = "configs.params.server\\.insecure"
+    value = "true"
+  }
 }
 
 resource "kubectl_manifest" "argocd_cm" {
@@ -58,9 +63,6 @@ metadata:
   name: argocd-server-ingress
   namespace: argocd
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     external-dns.alpha.kubernetes.io/hostname: ${var.argocd_host}
 spec:
   ingressClassName: nginx
@@ -74,38 +76,8 @@ spec:
           service:
             name: argocd-server
             port:
-              name: https
-  tls:
-  - hosts:
-    - ${var.argocd_host}
-    secretName: ssl-cert
+              name: http
 EOF
 depends_on = [ helm_release.argocd ]
 }
 
-resource "kubectl_manifest" "ssl_cert_secret" {
-  yaml_body = <<-EOT
-apiVersion: external-secrets.io/v1alpha1
-kind: ExternalSecret
-metadata:
-  name: ssl-cert
-  namespace: argocd
-spec:
-  secretStoreRef:
-    name: aws-parameter-store
-    kind: ClusterSecretStore
-  target:
-    name: ssl-cert
-    namespace: argocd
-    type: kubernetes.io/tls
-  data:
-  - secretKey: tls.crt
-    remoteRef:
-      key: /global/ssl_cert
-  - secretKey: tls.key
-    remoteRef:
-      key: /global/ssl_key
-EOT
-
-  depends_on = [helm_release.argocd]
-}

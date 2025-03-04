@@ -32,3 +32,7 @@ variable "argocd_accounts_entries" {
     permissions = string
   }))
 }
+
+variable "helm_argocd_version" {
+  type = string
+}

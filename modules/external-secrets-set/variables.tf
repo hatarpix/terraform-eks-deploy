@@ -9,17 +9,6 @@ variable "email_password" {
   type = string
 }
 
-variable "ssl_key_path" {
-  description = "SSL key"
-  type = string
-}
-
-variable "ssl_cert_path" {
-  description = "SSL cert"
-  type = string
-}
-
-variable "domain_name" {
-  description = "Domain name"
+variable "project_name" {
   type = string
 }

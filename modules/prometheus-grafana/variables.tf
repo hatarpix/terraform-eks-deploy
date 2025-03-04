@@ -3,9 +3,6 @@ terraform {
     kubectl = {
       source  = "gavinbunney/kubectl"
     }
-    postgresql = {
-      source  = "cyrilgdn/postgresql"
-    }
   }
 }
 
@@ -60,22 +57,6 @@ variable "email_port" {
   type        = string
 }
 
-variable "postgres_master_password" {
-  description = " The password for the master DB user"
-  type        = string
-}
-
-variable "eks_node_ip" {
-  description = "The IP address of the EKS node"
-  type        = string
-}
-
-variable "ssh_private_path" {
-  description = "The path to the SSH private key"
-  type        = string
-}
-
-variable "create_db" {
-  description = "Whether to create the database"
-  type        = bool
+variable "helm_version" {
+  type = string
 }

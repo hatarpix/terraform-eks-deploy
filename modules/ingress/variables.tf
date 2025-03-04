@@ -30,7 +30,14 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "internal_ingress" {
-  description = "Whether to create internal ingress rules"
-  type        = number
+variable "helm_alb_version" {
+  type = string
+}
+
+variable "helm_ingress_version" {
+  type = string
+}
+
+variable "certificate_arn" {
+  type = string
 }

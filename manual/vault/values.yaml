@@ -1,0 +1,48 @@
+server:
+
+  extraConfig: |
+    max_lease_ttl = "8760h"
+    default_lease_ttl = "8760h"
+
+  injector:
+    enabled: false
+
+  affinity:
+    nodeAffinity: {}
+    podAffinity: {}
+    podAntiAffinity: {}
+
+  ui:
+    enabled: true
+
+  ha:
+    enabled: true
+    raft:
+      enabled: true
+    config: |
+      ui = true
+      max_lease_ttl = "8760h"
+      default_lease_ttl = "8760h"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/whitelist-source-range: "1.1.1.1/32"
+    hosts:
+      - host: vault-dev.mydomain.info
+        http:
+          paths:
+          - backend:
+              service:
+                name: vault-active
+                port:
+                  number: 8200
+            path: /
+            pathType: Prefix
+    tls: []
+
+  service:
+    enabled: true
+    type: ClusterIP
+

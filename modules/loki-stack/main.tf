@@ -1,8 +1,12 @@
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
 resource "helm_release" "loki" {
   name       = "loki"
   chart      = "loki"
   repository = "https://grafana.github.io/helm-charts"
-  version    = "6.12.0"  # loki version 3.1.1
+  version    = var.helm_version
   namespace  = "loki"
   create_namespace = true
 
@@ -11,22 +15,12 @@ resource "helm_release" "loki" {
       role_arn         = aws_iam_role.loki_irsa_role.arn
       region           = var.region
       chunks_bucket    = aws_s3_bucket.loki_chunks.bucket
-      ruler_bucket     = aws_s3_bucket.loki_ruler.bucket
-      admin_bucket     = aws_s3_bucket.loki_admin.bucket
     })
   ]
 }
 
 resource "aws_s3_bucket" "loki_chunks" {
-  bucket = "loki-${var.project_name}-chunks"
-}
-
-resource "aws_s3_bucket" "loki_ruler" {
-  bucket = "loki-${var.project_name}-ruler"
-}
-
-resource "aws_s3_bucket" "loki_admin" {
-  bucket = "loki-${var.project_name}-admin"
+  bucket = "${var.project_name}-loki-${random_id.suffix.hex}"
 }
 
 resource "helm_release" "promtail" {
@@ -41,7 +35,7 @@ resource "helm_release" "promtail" {
     <<EOF
 config:
   clients:
-    - url: http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
+    - url: http://loki.loki.svc.cluster.local:3100/loki/api/v1/push
 EOF
   ]
 }

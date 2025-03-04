@@ -4,21 +4,21 @@ resource "aws_iam_role" "es_role" {
   name = "external_secrets_role-${var.project_name}"
 
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Federated": "${var.oidc_provider_arn}"
-            },
-            "Action": "sts:AssumeRoleWithWebIdentity",
-            "Condition": {
-                "StringEquals": {
-                    "${var.oidc_provider_url}:sub": "system:serviceaccount:external-secrets:external-secrets-sa",
-                    "${var.oidc_provider_url}:aud": "sts.amazonaws.com"
-                }
-            }
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Federated" : "${var.oidc_provider_arn}"
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity",
+        "Condition" : {
+          "StringEquals" : {
+            "${var.oidc_provider_url}:sub" : "system:serviceaccount:external-secrets:external-secrets-sa",
+            "${var.oidc_provider_url}:aud" : "sts.amazonaws.com"
+          }
         }
+      }
     ]
   })
 }
@@ -30,11 +30,11 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
 
 
 resource "helm_release" "external-secrets" {
-  name             = "external-secrets"
-  # repository       = "https://charts.external-secrets.io"
-  # chart            = "external-secrets"
-  chart = "./${path.module}/external-secrets-0.10.2.tgz"
+  name       = "external-secrets"
+  repository = "https://charts.external-secrets.io"
+  chart      = "external-secrets"
   namespace        = "external-secrets"
+  version          = var.helm_version
   create_namespace = true
 
   set {
@@ -56,7 +56,7 @@ resource "helm_release" "external-secrets" {
 
 resource "kubectl_manifest" "aws_parameter_store" {
   yaml_body = <<-EOT
-apiVersion: external-secrets.io/v1alpha1
+apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
 metadata:
   name: aws-parameter-store

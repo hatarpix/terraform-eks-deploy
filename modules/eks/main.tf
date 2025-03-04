@@ -1,6 +1,6 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  version         = "20.24.0" 
+  version         = "20.33.1"
   cluster_name    = "eks-${var.project_name}"
   cluster_version = var.cluster_version
   subnet_ids      = var.subnets
@@ -28,20 +28,20 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    worker-node-1 = {
+    worker-node-01 = {
       instance_types       = ["t3a.large"] # 
       capacity_type        = "ON_DEMAND"
-      min_size             = 1
-      max_size             = 5
+      min_size             = 2
+      max_size             = 6
       desired_size         = 2
       labels = {
-        "name"        = "worker-1-${var.project_name}"
+        "name"        = "worker-${var.project_name}-01"
         "environment" = "dev"
       }
       tags = {
         "Environment" = "dev"
         "Terraform"   = "true"
-        "Name"        = "worker-${var.project_name}-1"
+        "Name"        = "worker-${var.project_name}-01"
       }
     }
     # app-node-1 = {
@@ -73,11 +73,11 @@ module "eks" {
   }
 
   cluster_addons = {
-    coredns                = {addon_version = "v1.11.1-eksbuild.8"}
-    eks-pod-identity-agent = {addon_version = "v1.3.2-eksbuild.2"}
-    kube-proxy             = {addon_version = "v1.30.0-eksbuild.3"}
+    coredns                = {addon_version = var.coredns_version}
+    eks-pod-identity-agent = {addon_version = var.pod_identity_version}
+    kube-proxy             = {addon_version = var.kube_proxy_version}
     vpc-cni                = {
-      addon_version = "v1.18.1-eksbuild.3"
+      addon_version = var.cni_version
       before_compute = true
       configuration_values = jsonencode({
         env = {
@@ -86,7 +86,7 @@ module "eks" {
         }
       })}
     aws-efs-csi-driver = {
-      addon_version = "v2.0.7-eksbuild.1"
+      addon_version = var.efs_csi_version
       service_account_role_arn  = aws_iam_role.efs_csi_driver_role.arn
     }
   }

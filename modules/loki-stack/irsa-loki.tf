@@ -13,7 +13,7 @@ resource "aws_iam_role" "loki_irsa_role" {
         "Condition": {
           "StringEquals": {
             "${var.oidc_provider_url}:aud": "sts.amazonaws.com",
-            "${var.oidc_provider_url}:sub": "system:serviceaccount:monitoring:loki-sa"
+            "${var.oidc_provider_url}:sub": "system:serviceaccount:loki:loki-sa"
           }
         }
       }
@@ -33,7 +33,7 @@ resource "aws_iam_policy" "loki_irsa_policy" {
         "Action": [
           "s3:*"
         ],
-        "Resource": "arn:aws:s3:::loki-${var.project_name}-*"
+        "Resource": "arn:aws:s3:::${var.project_name}-loki-*"
       }
     ]
   })

@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "~> 1.14.0"  
-    }
-  }
-}
 
 variable "project_name" {
   description = "The name of the project"
@@ -22,12 +14,5 @@ variable "oidc_provider_url" {
   type        = string
 }
 
-variable "region" {
-  description = "The AWS region"
-  type        = string
-}
 
-variable "helm_version" {
-  type = string
-}
 

@@ -1,0 +1,50 @@
+region           = "us-east-1"
+aws_profile_name = "default"
+s3_bucket_state = "terraform-state-env"
+project_name     = "kub-1"
+ssh_key_name     = "k8s-dev-1"
+ssh_key_path     = "k8s-dev/id_ed25519.pub"
+ssh_private_path = "k8s-dev/id_ed25519"
+domain_name      = "mydomain.info"
+email_server = "smtp.gmail.com"
+email_port = 587
+email_user = "mygmailuser@gmail.com"
+email_password = "mygmailpassword"
+email_from = "mygmailuser@gmail.com"
+grafana_host = "grafana-dev"
+grafana_password = "superpassword-admin"
+grafana_email = "mygmailuser@gmail.com"
+grafana_db_host = "rds-grafana.us-east-1.rds.amazonaws.com"
+grafana_db_user =  "grafana"
+grafana_db_name = "grafana"
+grafana_db_password = "grafanapassword-db"
+argocd_rbac_entries = [
+  {
+    user = "user-1"
+    role = "role:org-admin"
+  },
+  {
+    user = "user-2"
+    role = "role:org-admin"
+  },
+  {
+    user = "user-3"
+    role = "role:org-admin"
+  }
+]
+argocd_accounts_entries = [ 
+    {
+    user     = "user-1"
+    permissions = "apiKey, login"
+  },
+  {
+    user     = "user-2"
+    permissions = "apiKey, login"
+  },
+  {
+    user     = "auser-3"
+    permissions = "apiKey, login"
+  }
+ ]
+
+certificate_arn = "arn:aws:acm:us-east-1:XXXXXXXXXXXXX:certificate/UUID"

@@ -49,13 +49,10 @@ grafana:
     ingressClassName: nginx
     annotations:
       kubernetes.io/ingress.class: nginx
+      external-dns.alpha.kubernetes.io/hostname: ${grafana_host}
     hosts:
     - ${grafana_host}
     path: /
-    tls:
-    - secretName: ssl-cert
-      hosts:
-      - ${grafana_host}
   grafana.ini:
     database:
       host: ${grafana_db_host}
@@ -80,6 +77,6 @@ grafana:
   additionalDataSources:
     - name: Loki
       type: loki
-      url: http://loki-gateway.loki.svc.cluster.local
+      url: http://loki.loki.svc.cluster.local:3100
       access: proxy
       isDefault: false

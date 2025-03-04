@@ -80,6 +80,8 @@ resource "aws_route_table" "public" {
   tags = {
     Name = "public-route-table-${var.project_name}"
     Terraform  = "true"
+    "kubernetes.io/role/elb"  = "1"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -94,6 +96,8 @@ resource "aws_route_table" "private" {
   tags = {
     Name = "private-route-table-${var.project_name}"
     Terraform  = "true"
+    "kubernetes.io/role/elb"  = "1"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -127,12 +131,3 @@ resource "aws_vpc_endpoint" "s3" {
   }
 }
 
-resource "aws_key_pair" "admin_key" {
-  key_name   = var.ssh_key_name  # Desired name for the key pair
-  public_key = file(var.ssh_key_path)  # Path to your existing public key
-
-  tags = {
-    Name = "admin-key-${var.project_name}"
-    Terraform  = "true"
-  }
-}

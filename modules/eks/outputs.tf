@@ -12,7 +12,7 @@ output "eks_cluster_name" {
 
 resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
-    command = "AWS_PROFILE=${var.aws_profile_name} aws eks update-kubeconfig --name ${module.eks.cluster_name} --kubeconfig ~/.kube/eks-${var.project_name}"
+    command = "AWS_PROFILE=${var.aws_profile_name} aws eks update-kubeconfig --name ${module.eks.cluster_name} --kubeconfig ~/.kube/eks-${var.project_name} --region ${var.region}"
   }
   # triggers = {
   #   always_run = "${timestamp()}"
@@ -28,6 +28,7 @@ output "eks_oidc_provider_url" {
 }
 
 ### Node IP ###
+## For use as a jumphost
 
 
 # Get information about the EC2 instances in the node group
@@ -38,12 +39,6 @@ data "aws_instances" "worker_node" {
 
   instance_state_names = ["running"]
 }
-
-# Output the private IP of the first node
-# output "worker_node_1_first_ip" {
-#   value       = length(data.aws_instances.worker_node_1_instances.private_ips) > 0 ? data.aws_instances.worker_node_1_instances.private_ips[0] : "No running instances found"
-#   description = "Private IP of the first node in worker-node-1 group"
-# }
 
 # Output the public IP of the first node (if available)
 output "node_ip" {

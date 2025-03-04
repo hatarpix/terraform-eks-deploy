@@ -1,0 +1,12 @@
+First init:
+
+aws s3 cp s3://terraform-state-env/k8s-dev/terraform.tfvars .
+terraform init \
+  -backend-config="bucket=terraform-state-env" \
+  -backend-config="key=k8s-dev/terraform.tfstate" 
+
+
+
+After change TFVARS
+aws s3 cp ./terraform.tfvars s3://terraform-state-env/k8s-dev/
+

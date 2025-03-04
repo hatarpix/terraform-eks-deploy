@@ -28,14 +28,4 @@ variable "project_name" {
   default     = "project_name"
 }
 
-variable "ssh_key_name" {
-  description = "The name of the SSH key pair to use"
-  type        = string
-  default     = "aws-key"
-}
 
-variable "ssh_key_path" {
-  description = "The path to the SSH key pair to use"
-  type        = string
-  default     = "~/.ssh/id_k8s.pub"
-}

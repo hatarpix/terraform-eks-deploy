@@ -32,7 +32,33 @@ variable "ssh_key_name" {
   type        = string
 }
 
+# for create kubeconfig
 variable "aws_profile_name" {
   description = "The AWS profile name"
+  type        = string
+}
+
+variable "coredns_version" {
+  description = "Version of CoreDNS to deploy in the EKS cluster for DNS resolution."
+  type        = string
+}
+
+variable "pod_identity_version" {
+  description = "Version of the pod identity webhook to use for enabling IAM roles for service accounts."
+  type        = string
+}
+
+variable "kube_proxy_version" {
+  description = "Version of kube-proxy to deploy in the EKS cluster."
+  type        = string
+}
+
+variable "cni_version" {
+  description = "Version of the Amazon VPC CNI plugin for Kubernetes."
+  type        = string
+}
+
+variable "efs_csi_version" {
+  description = "Version of the Amazon EFS CSI driver to use in the EKS cluster."
   type        = string
 }

@@ -7,7 +7,7 @@ variable "region" {
 variable "aws_profile_name" {
   description = "The AWS profile name"
   type        = string
-  default     = "dev-profile"
+  default     = "dev-vvoropai"
 }
 
 variable "dns_profile_name" {
@@ -182,3 +182,11 @@ variable "argocd_accounts_entries" {
   default = []
 }
 
+variable "s3_bucket_state" {
+  description = "The name of the S3 bucket to use for Terraform state"
+  type        = string
+}
+
+variable "certificate_arn" {
+  type = string
+}
